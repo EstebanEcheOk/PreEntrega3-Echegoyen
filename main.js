@@ -59,7 +59,7 @@ function mostrarCarrito() {
 }
 
 function vaciarCarrito() {
-    carritoDeCompras.length = 0; // Vaciar el array del carrito
+    carritoDeCompras.length = 0; 
     console.clear();
     console.log("El carrito de compras se ha vaciado.");
 }
