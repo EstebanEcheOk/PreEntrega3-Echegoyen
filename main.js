@@ -31,24 +31,33 @@ function mostrarProductos() {
 
 function agregarAlCarrito() {
     const productoIndex = parseInt(prompt("Ingrese el número del producto que desea agregar al carrito:")) - 1;
-    const cantidad = parseInt(prompt("Ingrese la cantidad que desea comprar:"));
 
     if (productoIndex >= 0 && productoIndex < productos.length) {
         const producto = productos[productoIndex];
-        if (producto.cantidad >= cantidad) {
-            carritoDeCompras.push({ ...producto, cantidad: cantidad });
-            producto.cantidad -= cantidad;
-            console.clear();
-            console.log(`Se han agregado ${cantidad} ${producto.nombre} al carrito.`);
-        } else {
-            console.clear();
-            console.log(`No hay suficiente stock de ${producto.nombre}.`);
-        }
+        let cantidad;
+
+        do {
+            cantidad = parseInt(prompt("Ingrese la cantidad que desea comprar:"));
+            if (cantidad <= 0) {
+                console.clear();
+                console.log("La cantidad ingresada no es válida. Debe ser mayor que 0.");
+            } else if (producto.cantidad < cantidad) {
+                console.clear();
+                console.log(`No hay suficiente stock de ${producto.nombre}. Stock disponible: ${producto.cantidad}`);
+            }
+        } while (cantidad <= 0 || producto.cantidad < cantidad);
+
+        carritoDeCompras.push({ ...producto, cantidad: cantidad });
+        producto.cantidad -= cantidad;
+        console.clear();
+        console.log(`Se han agregado ${cantidad} ${producto.nombre} al carrito.`);
     } else {
         console.clear();
         console.log("El producto seleccionado no es válido.");
     }
 }
+
+
 
 function mostrarCarrito() {
     console.clear();
