@@ -75,6 +75,22 @@ function vaciarCarrito() {
 
 function calcularTotalCarrito() {
     const total = carritoDeCompras.reduce((acc, producto) => acc + producto.precio * producto.cantidad, 0);
+    let descuento = 0;
+
     console.clear();
+    console.log("Resumen del carrito de compras:");
+
+    carritoDeCompras.forEach((producto, index) => {
+        console.log(`${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Cantidad: ${producto.cantidad}`);
+    });
+
     console.log(`Total del carrito de compras: $${total}`);
+
+    if (total > 100000) {
+        descuento = total * 0.10;
+        console.log(`Descuento del 10% aplicado: $${descuento}`);
+    }
+
+    const totalConDescuento = total - descuento;
+    console.log(`Total con descuento: $${totalConDescuento}`);
 }
