@@ -62,10 +62,8 @@ function agregarAlCarrito() {
         carritoDeCompras.push({ ...producto, cantidad: cantidad });
         producto.cantidad -= cantidad;
 
-        // Mostrar mensaje en el DOM
         outputDiv.innerHTML = `Se han agregado ${cantidad} ${producto.nombre} al carrito.`;
 
-        // Actualizar el localStorage
         localStorage.setItem('carritoDeCompras', JSON.stringify(carritoDeCompras));
     } else {
         outputDiv.innerHTML = "El producto seleccionado no es válido.";
