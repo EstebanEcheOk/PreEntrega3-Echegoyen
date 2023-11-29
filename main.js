@@ -19,14 +19,29 @@ const productos = [
 
 ];
 
-const carritoDeCompras = [];
+
+let carritoDeCompras = [];
+
+const outputDiv = document.getElementById('output');
+
+const btnMostrarProductos = document.getElementById('mostrarProductos');
+const btnMostrarCarrito = document.getElementById('mostrarCarrito');
+const btnAgregarAlCarrito = document.getElementById('agregarAlCarrito');
+const btnVaciarCarrito = document.getElementById('vaciarCarrito');
+const btnCalcularTotalCarrito = document.getElementById('calcularTotalCarrito');
+
+btnMostrarProductos.addEventListener('click', mostrarProductos);
+btnMostrarCarrito.addEventListener('click', mostrarCarrito);
+btnAgregarAlCarrito.addEventListener('click', agregarAlCarrito);
+btnVaciarCarrito.addEventListener('click', vaciarCarrito);
+btnCalcularTotalCarrito.addEventListener('click', calcularTotalCarrito);
 
 function mostrarProductos() {
-    console.clear();
-    console.log("Lista de productos disponibles:");
+    let output = "Lista de productos disponibles:<br>";
     productos.forEach((producto, index) => {
-        console.log(`${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Stock: ${producto.cantidad}`);
+        output += `${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Stock: ${producto.cantidad}<br>`;
     });
+    outputDiv.innerHTML = output;
 }
 
 function agregarAlCarrito() {
@@ -38,59 +53,58 @@ function agregarAlCarrito() {
 
         do {
             cantidad = parseInt(prompt("Ingrese la cantidad que desea comprar:"));
-            if (cantidad <= 0) {
+            if (isNaN(cantidad) || cantidad <= 0 || cantidad > producto.cantidad) {
                 console.clear();
-                console.log("La cantidad ingresada no es válida. Debe ser mayor que 0.");
-            } else if (producto.cantidad < cantidad) {
-                console.clear();
-                console.log(`No hay suficiente stock de ${producto.nombre}. Stock disponible: ${producto.cantidad}`);
+                console.log("La cantidad ingresada no es válida o excede el stock disponible.");
             }
-        } while (cantidad <= 0 || producto.cantidad < cantidad);
+        } while (isNaN(cantidad) || cantidad <= 0 || cantidad > producto.cantidad);
 
         carritoDeCompras.push({ ...producto, cantidad: cantidad });
         producto.cantidad -= cantidad;
-        console.clear();
-        console.log(`Se han agregado ${cantidad} ${producto.nombre} al carrito.`);
+
+        // Mostrar mensaje en el DOM
+        outputDiv.innerHTML = `Se han agregado ${cantidad} ${producto.nombre} al carrito.`;
+
+        // Actualizar el localStorage
+        localStorage.setItem('carritoDeCompras', JSON.stringify(carritoDeCompras));
     } else {
-        console.clear();
-        console.log("El producto seleccionado no es válido.");
+        outputDiv.innerHTML = "El producto seleccionado no es válido.";
     }
 }
 
-
-
 function mostrarCarrito() {
-    console.clear();
-    console.log("Contenido del carrito de compras:");
+    let output = "Contenido del carrito de compras:<br>";
     carritoDeCompras.forEach((producto, index) => {
-        console.log(`${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Cantidad: ${producto.cantidad}`);
+        output += `${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Cantidad: ${producto.cantidad}<br>`;
     });
+    outputDiv.innerHTML = output;
 }
 
 function vaciarCarrito() {
-    carritoDeCompras.length = 0; 
-    console.clear();
-    console.log("El carrito de compras se ha vaciado.");
+    carritoDeCompras = [];
+    localStorage.removeItem('carritoDeCompras');
+    outputDiv.innerHTML = "El carrito de compras se ha vaciado.";
 }
 
 function calcularTotalCarrito() {
     const total = carritoDeCompras.reduce((acc, producto) => acc + producto.precio * producto.cantidad, 0);
     let descuento = 0;
 
-    console.clear();
-    console.log("Resumen del carrito de compras:");
+    let output = "Resumen del carrito de compras:<br>";
 
     carritoDeCompras.forEach((producto, index) => {
-        console.log(`${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Cantidad: ${producto.cantidad}`);
+        output += `${index + 1}. ${producto.nombre} - Precio: $${producto.precio} - Cantidad: ${producto.cantidad}<br>`;
     });
 
-    console.log(`Total del carrito de compras: $${total}`);
+    output += `Total del carrito de compras: $${total}<br>`;
 
     if (total > 100000) {
         descuento = total * 0.10;
-        console.log(`Descuento del 10% aplicado: $${descuento}`);
+        output += `Descuento del 10% aplicado: $${descuento}<br>`;
     }
 
     const totalConDescuento = total - descuento;
-    console.log(`Total con descuento: $${totalConDescuento}`);
+    output += `Total con descuento: $${totalConDescuento}`;
+
+    outputDiv.innerHTML = output;
 }
